@@ -7,14 +7,16 @@
 
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="css/bootstrap.min.css">
-<link rel="stylesheet" href="css/app.css">
 <link rel="stylesheet" href="css/ng-table.min.css">
+<link rel="stylesheet" href="css/font-awesome.min.css">
+<link rel="stylesheet" href="css/app.css">
 
 <!-- js -->
 <script src="js/jquery-3.2.1.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/angular.js"></script>
 <script src="js/angular-ui-router.js"></script>
+<script src="js/ui-bootstrap.min.js"></script>
 <script src="js/ng-table.min.js"></script>
 <script src="js/app.js"></script>
 <title>AWS</title>
@@ -44,9 +46,11 @@
 	</nav>  
 	<div class="w3-container container-fluid">    
 	  <div class="row content">
-	    <div class="col-md-2 sidenav w3-light-grey w3-bar-block">
-			  <a ui-sref="dashboard" class="w3-bar-item w3-button" style="text-decoration:none">Dashboard</a>
-			  <a ui-sref="upload" class="w3-bar-item w3-button" style="text-decoration:none">Upload</a>
+	    <div class="col-md-2 sidenav w3-light-grey w3-bar-block card" style="margin-left: -1px;">
+			  <a ui-sref="dashboard" class="w3-bar-item w3-button" style="text-decoration:none">
+			  <i class="fa fa-folder-o"></i>&nbsp; Dashboard</a>
+			  <a ui-sref="upload" class="w3-bar-item w3-button" style="text-decoration:none">
+			  <i class="fa fa-upload"></i>&nbsp; Upload</a>
 	    </div>
 	    <div class="col-md-10">
 			    <div ui-view></div>

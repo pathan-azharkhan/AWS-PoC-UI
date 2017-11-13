@@ -1,4 +1,4 @@
-var app = angular.module("aws", ['ui.router','ngTable']); 
+var app = angular.module("aws", ['ui.router','ui.bootstrap','ngTable']); 
 
 app.config(function($stateProvider, $urlRouterProvider) {
 
@@ -62,4 +62,5 @@ app.controller("awsCtrl", ['$scope','$state', '$http','NgTableParams',function($
     			}
     	}
     }
+		  
 }]);
