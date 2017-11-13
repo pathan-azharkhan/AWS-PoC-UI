@@ -1,0 +1,28 @@
+<div class="jumbotron" style="margin-top:20px;">
+	<div class="row" title="Dashboard" style="margin-left: 10px;"><h4><b>Dashboard</b></h4></div>
+	
+	<div class="container text-center row">
+	  		<div style="padding-top: 20px;padding-bottom: 20px;padding-right: initial;padding-left: inherit;">
+		                  <table class="table table-bordered table-striped table-hover">
+		                     <thead>
+			                     <tr>
+			                        <th>Region</th>
+			                        <th>Volume</th>
+			                        <th>Processed</th>
+			                        <th>Rejected</th>
+			                        <th>Error</th>
+			                     </tr> 
+		                     </thead> 
+		                     <tbody>                   
+			                     <tr ng-repeat = "x in vm.data">
+			                        <td>{{ x.Region }}</td>
+			                        <td>{{ x.Volume }}</td>
+			                        <td>{{ x.Processed }}</td>
+			                        <td>{{ x.Rejected }}</td>
+			                        <td>{{ x.Error }}</td>
+			                     </tr>
+		                     </tbody>							
+		                  </table>
+		      </div>
+	  </div>
+</div>
