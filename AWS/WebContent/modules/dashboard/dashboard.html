@@ -1,9 +1,25 @@
 <div class="jumbotron" style="margin-top:20px;">
-	<div class="row" title="Dashboard" style="margin-left: 10px;"><h4><b>Dashboard</b></h4></div>
+	<div class="row" title="Dashboard" style="margin-left:0px;"><h4><b>Dashboard</b></h4></div>
+	
+	<div class="row">
+		<div class="col-md-3" style="margin-top:16px;">
+	        <p class="input-group">
+	          <input type="text" class="form-control" uib-datepicker-popup="{{vm.format}}" ng-model="vm.date" 
+	          is-open="vm.popup.opened" datepicker-options="vm.dateOptions" close-text="Close" />
+	          <span class="input-group-btn">
+	            <button type="button" class="btn btn-default" ng-click="vm.open()">
+	            <i class="glyphicon glyphicon-calendar"></i></button>
+	          </span>
+	        </p>
+	     </div>
+	     <div class="col-md-3" style="margin-top:16px;">
+	     <button type="submit" class="btn btn-default btn-success card" ng-click=""> Submit</button>
+	     </</div>
+    </div>
 	
 	<div class="container text-center row">
 	  		<div style="padding-top: 20px;padding-bottom: 20px;padding-right: initial;padding-left: inherit;">
-		                  <table class="table table-bordered table-striped table-hover card">
+		                  <table class="table table-bordered table-striped table-condensed table-hover card">
 		                     <thead>
 			                     <tr>
 			                        <th>Region</th>
