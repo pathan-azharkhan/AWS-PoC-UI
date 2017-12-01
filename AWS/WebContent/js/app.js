@@ -1,3 +1,7 @@
+
+(function() {
+  "use strict";
+  
 var app = angular.module("aws", ['ui.router','ui.bootstrap','ngTable']); 
 
 app.config(function($stateProvider, $urlRouterProvider) {
@@ -20,25 +24,78 @@ app.config(function($stateProvider, $urlRouterProvider) {
 
 });
 
-app.controller("awsCtrl", ['$scope','$state', '$http','NgTableParams',function($scope,$state,$http,NgTableParams) {
+app.factory("awsService", ['$http','$q',function($http,$q){
 	
-	/*$scope.$state = $state;*/
+	return {
+		fetchDetails: function() {
+			
+	        var deferred = $q.defer();
+	        
+	        $http.get("json/Information.json").then(function(response){
+	           deferred.resolve(response.data);
+	        }).catch(function(response){
+	          deferred.reject(response);
+	        });
+	        
+	        return deferred.promise;
+	    },
+	    getCtrlData: function(selectedDate) {
+			
+	        var deferred = $q.defer();
+	        
+	        $http.get("/dashboard-data?selectedDate="+selectedDate).then(function(response){
+	           deferred.resolve(response.data);
+	        }).catch(function(response){
+	          deferred.reject(response);
+	        });
+	        
+	        return deferred.promise;
+	    }
+	  }
+ 
+}]);
+
+app.controller("awsCtrl", ['$scope','$state', '$http','NgTableParams','awsService',function($scope,$state,$http,NgTableParams,awsService) {
 	
-	var vm=this;	
+	var vm=this;
 	
 	vm.products = "Basic_products";
 	
-	vm.dbcondition=false;
+	vm.dbcondition=true;
 	vm.upcondition=false;
-       
-    $http.get("json/Information.json").then(function (response) {
-    	vm.data = response.data;
-    	vm.datalength = vm.data.length;
-    },function (error){
-        console.log(error, 'can not get data.');
-    });
+	
+    vm.init= function(){ 
+    	
+    	 awsService.fetchDetails().then(function(data){
+        	vm.users = data;
+        	
+       	    vm.tableParams = new NgTableParams({
+       	        page: 1,
+       	        count: 5
+       	    }, {
+       	        total: vm.users.length, 
+       	        getData: function ($defer, params) {
+       	        	vm.data = vm.users.slice((params.page() - 1) * params.count(), params.page() * params.count());
+       	            $defer.resolve(vm.data);
+       	        }
+       	   });
+         })
+         .catch(function(response){
+            console.log(response.status);
+         });
+    	 
+    }    
+    vm.init();
     
-    vm.tableParams = new NgTableParams({}, { dataset: vm.data});
+    vm.submit= function(selectedDate){ 
+    	
+    	awsService.getCtrlData(selectedDate).then(function(data){
+        	vm.ctrlData = data;
+         })
+         .catch(function(response){
+            console.log(response.status);
+         });
+    }
     
     
 	vm.content = [{
@@ -87,11 +144,12 @@ app.controller("awsCtrl", ['$scope','$state', '$http','NgTableParams',function($
 			    vm.popup.opened = true;
 			  };
 
-			  vm.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
-			  vm.format = vm.formats[0];
+			  vm.formats = ['dd-MMMM-yyyy', 'yyyy-MM-dd', 'dd.MM.yyyy', 'shortDate'];
+			  vm.format = vm.formats[1];
 
 			  vm.popup = {
 			    opened: false
 			  };
 		  
 }]);
+})();

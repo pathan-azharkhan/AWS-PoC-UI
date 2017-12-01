@@ -50,7 +50,7 @@
 			  <a ui-sref="dashboard" ng-class="{dbhighlight: vm.dbcondition}"  class="w3-bar-item w3-button" 
 			  ng-click="vm.dbconditionfunc()" style="text-decoration:none" title="Dashboard">
 			  <i class="fa fa-folder-o"></i>&nbsp; <b>Dashboard</b></a>
-			  <a ui-sref="upload" ng-class="{uphighlight: vm.upcondition}"  class="w3-bar-item w3-button" 
+			  <a ng-if="true" ui-sref="upload" ng-class="{uphighlight: vm.upcondition}"  class="w3-bar-item w3-button" 
 			  ng-click="vm.upconditionfunc()" style="text-decoration:none" title="Upload">
 			  <i class="fa fa-upload"></i>&nbsp; <b>Upload</b></a>
 	    </div>
