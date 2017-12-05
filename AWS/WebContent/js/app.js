@@ -1,4 +1,3 @@
-
 (function() {
   "use strict";
   
@@ -41,21 +40,19 @@ app.factory("awsService", ['$http','$q',function($http,$q){
 	    },
 	    getCtrlData: function(selectedDate) {
 			
-	        var deferred = $q.defer();
-	        
-	        $http.get("/dashboard-data?selectedDate="+selectedDate).then(function(response){
+	        var deferred = $q.defer();	        
+	        $http.get("http://pc361688:5000/dashboard-data?selectedDate="+selectedDate).then(function(response){
 	           deferred.resolve(response.data);
 	        }).catch(function(response){
 	          deferred.reject(response);
-	        });
-	        
+	        });	        
 	        return deferred.promise;
 	    }
 	  }
  
 }]);
 
-app.controller("awsCtrl", ['$scope','$state', '$http','NgTableParams','awsService',function($scope,$state,$http,NgTableParams,awsService) {
+app.controller("awsCtrl", ['$scope','$state', '$http','$location','$window','NgTableParams','awsService',function($scope,$state,$http,$location,$window,NgTableParams,awsService) {
 	
 	var vm=this;
 	
@@ -63,34 +60,16 @@ app.controller("awsCtrl", ['$scope','$state', '$http','NgTableParams','awsServic
 	
 	vm.dbcondition=true;
 	vm.upcondition=false;
-	
-    vm.init= function(){ 
-    	
-    	 awsService.fetchDetails().then(function(data){
-        	vm.users = data;
-        	
-       	    vm.tableParams = new NgTableParams({
-       	        page: 1,
-       	        count: 5
-       	    }, {
-       	        total: vm.users.length, 
-       	        getData: function ($defer, params) {
-       	        	vm.data = vm.users.slice((params.page() - 1) * params.count(), params.page() * params.count());
-       	            $defer.resolve(vm.data);
-       	        }
-       	   });
-         })
-         .catch(function(response){
-            console.log(response.status);
-         });
-    	 
-    }    
-    vm.init();
     
-    vm.submit= function(selectedDate){ 
+    vm.submit= function(selectedDate){
     	
-    	awsService.getCtrlData(selectedDate).then(function(data){
-        	vm.ctrlData = data;
+    	vm.dt = new Date(selectedDate),
+		vm.mnth = ("0" + (vm.dt.getMonth()+1)).slice(-2),
+		vm.day  = ("0" + vm.dt.getDate()).slice(-2);
+		vm.date= [ vm.dt.getFullYear(), vm.mnth, vm.day ].join("-");
+		
+    	awsService.getCtrlData(vm.date).then(function(data){    		
+        	vm.ctrlData = data;        	
          })
          .catch(function(response){
             console.log(response.status);
@@ -128,28 +107,52 @@ app.controller("awsCtrl", ['$scope','$state', '$http','NgTableParams','awsServic
 		vm.dbcondition=true;
 		vm.upcondition=false;
 	}
+	
 	vm.upconditionfunc = function(){
 		vm.dbcondition=false;
 		vm.upcondition=true;
 	}
 
 	vm.dateOptions = {
-			    formatYear: 'yy',
-			    maxDate: new Date(2100, 5, 22),
-			    minDate: new Date(),
-			    startingDay: 1
-			  };
+		formatYear: 'yy',
+	    maxDate: new Date(2100, 5, 22),
+	    minDate: new Date(1900, 5, 22),
+	    startingDay: 1
+	};
 
-			  vm.open = function() {
-			    vm.popup.opened = true;
-			  };
+	vm.open = function() {
+	vm.popup.opened = true;
+	};
 
-			  vm.formats = ['dd-MMMM-yyyy', 'yyyy-MM-dd', 'dd.MM.yyyy', 'shortDate'];
-			  vm.format = vm.formats[1];
+	vm.formats = ['dd-MMMM-yyyy', 'yyyy-MM-dd', 'dd.MM.yyyy', 'shortDate'];
+	vm.format = vm.formats[1];
 
-			  vm.popup = {
-			    opened: false
-			  };
+	vm.popup = {
+		opened: false
+	};
+	
+    vm.init= function(){ 
+    	
+    	 awsService.fetchDetails().then(function(data){
+        	vm.users = data;
+        	
+       	    vm.tableParams = new NgTableParams({
+       	        page: 1,
+       	        count: 5
+       	    }, {
+       	        total: vm.users.length, 
+       	        getData: function ($defer, params) {
+       	        	vm.data = vm.users.slice((params.page() - 1) * params.count(), params.page() * params.count());
+       	            $defer.resolve(vm.data);
+       	        }
+       	   });
+         })
+         .catch(function(response){
+            console.log(response.status);
+         });
+    	 
+    }    
+    vm.init();
 		  
 }]);
 })();
