@@ -22,14 +22,13 @@
 		<div class="col-md-3" style="margin-top: 16px;">
 			<button type="submit" class="btn btn-default btn-success card"
 				ng-click="vm.submit(vm.selectedDate)">Submit</button>
-			</
 		</div>
 
 		<!-- <div class="col-md-6" style="margin-top:16px;">
-		     <button type="button" class="btn btn-default btn-primary card" title="Upload">
+		     <button type="button" class="btn btn-default btn-primary card" title="Upload" data-toggle="modal" data-target="#uploadModal">
 	          <span class="glyphicon glyphicon-upload"></span> Upload
 	        </button>
-         </div>	  -->
+         </div>	 --> 
 	</div>
 
 	<div class="container text-center row">
@@ -38,31 +37,47 @@
 			<table ng-if="vm.ctrlData" class="table table-bordered table-striped table-condensed table-hover card">
 				<thead>
 					<tr>	
-						<th style="text-align:center;" >Region</th>				
+						<th style="text-align:center;" >Region</th>	
+						<th style="text-align:center;" >Volume</th>				
 						<th style="text-align:center;" >Processed</th>
+						<th style="text-align:center;" >Error</th>
 						<th style="text-align:center;" >Rejected</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr ng-repeat="(key, value) in vm.ctrlData">
 						<td>{{key}}</td>
-						<td>{{value.PROCESSED}}</td>
-						<td>{{value.REJECTED}}</td>
+						<td ng-if="value.PROCESSED || value.ERROR|| value.REJECTED">{{value.PROCESSED+value.ERROR+value.REJECTED}}</td>
+						<td ng-if="!value.PROCESSED && !value.ERROR && !value.REJECTED">0</td>
+						<td ng-if="value.PROCESSED">{{value.PROCESSED}}</td>
+						<td ng-if="!value.PROCESSED">0</td>
+						<td ng-if="value.ERROR">{{value.ERROR}}</td>
+						<td ng-if="!value.ERROR">0</td>
+						<td ng-if="value.REJECTED">{{value.REJECTED}}</td>
+						<td ng-if="!value.REJECTED">0</td>
 					</tr>
 				</tbody>
 			</table>
-
-			<!-- <table ng-table="vm.tableParams" class="table table-bordered table-striped table-condensed table-hover card" >
-						    <tr ng-repeat="(key, value) in vm.ctrlData">
-						        <td data-title="'Region'">
-						            {{key}}</td>
-						        <td data-title="'Processed'" >
-						            {{value.PROCESSED}}</td>
-						        <td data-title="'Rejected'" >
-						            {{value.REJECTED}}</td>					    
-						    </tr>
-				</table> -->
-
+			<!--  <table class="table table-bordered table-striped table-condensed table-hover card">
+		                     <thead>
+			                     <tr>
+			                        <th>Region</th>
+			                        <th>Volume</th>
+			                        <th>Processed</th>
+			                        <th>Rejected</th>
+			                        <th>Error</th>
+			                     </tr> 
+		                     </thead> 
+		                     <tbody>                   
+			                     <tr ng-repeat = "x in vm.users">
+			                        <td>{{ x.Region }}</td>
+			                        <td>{{ x.Volume }}</td>
+			                        <td>{{ x.Processed }}</td>
+			                        <td>{{ x.Rejected }}</td>
+			                        <td>{{ x.Error }}</td>
+			                     </tr>
+		                     </tbody>							
+		                  </table> -->
 		</div>
 	</div>
 </div>
