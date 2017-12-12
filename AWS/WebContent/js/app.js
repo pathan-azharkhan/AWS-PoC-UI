@@ -23,6 +23,22 @@ app.config(function($stateProvider, $urlRouterProvider) {
 
 });
 
+app.directive('fileModel', ['$parse', function ($parse) {
+    return {
+       restrict: 'A',
+       link: function(scope, element, attrs) {
+          var model = $parse(attrs.fileModel);
+          var modelSetter = model.assign;
+          
+          element.bind('change', function(){
+             scope.$apply(function(){
+                modelSetter(scope, element[0].files[0]);
+             });
+          });
+       }
+    };
+ }]);
+
 app.factory("awsService", ['$http','$q',function($http,$q){
 	
 	return {
@@ -52,7 +68,30 @@ app.factory("awsService", ['$http','$q',function($http,$q){
  
 }]);
 
-app.controller("awsCtrl", ['$scope','$state', '$http','$location','$window','NgTableParams','awsService',function($scope,$state,$http,$location,$window,NgTableParams,awsService) {
+
+app.service('uploadFile', ['$http','$q', function ($http,$q) {
+            this.uploadFileToUrl = function(file, uploadUrl){
+               var fd = new FormData();
+               fd.append('file', file);
+            
+               var deffered = $q.defer();
+               
+               $http.post(uploadUrl, fd, {
+                  transformRequest: angular.identity,
+                  headers: {'Content-Type': undefined}
+               })            
+               .success(function(response){
+            	   deffered.resolve(response);
+               })            
+               .error(function(response){
+            	   deffered.reject(response);
+               });
+               return deffered.promise;
+            }            
+}]);
+
+
+app.controller("awsCtrl", ['$scope','$state', '$http','$location','$window','NgTableParams','awsService','uploadFile',function($scope,$state,$http,$location,$window,NgTableParams,awsService,uploadFile) {
 	
 	var vm=this;
 	
@@ -69,7 +108,7 @@ app.controller("awsCtrl", ['$scope','$state', '$http','$location','$window','NgT
 		vm.date= [ vm.dt.getFullYear(), vm.mnth, vm.day ].join("-");
 		
     	awsService.getCtrlData(vm.date).then(function(data){    		
-        	vm.ctrlData = data;        	
+        	vm.ctrlData = data;
          })
          .catch(function(response){
             console.log(response.status);
@@ -131,6 +170,16 @@ app.controller("awsCtrl", ['$scope','$state', '$http','$location','$window','NgT
 		opened: false
 	};
 	
+	vm.fileUpload = function(){
+        var file = vm.fileName;
+        
+        console.log('file is ' );
+        console.dir(file);
+        
+        var uploadUrl = "";
+        vm.sampleupload=uploadFile.uploadFileToUrl(file, uploadUrl);
+     };
+	
     vm.init= function(){ 
     	
     	 awsService.fetchDetails().then(function(data){
@@ -150,9 +199,9 @@ app.controller("awsCtrl", ['$scope','$state', '$http','$location','$window','NgT
          .catch(function(response){
             console.log(response.status);
          });
-    	 
     }    
-    vm.init();
+    vm.init();   
+    
 		  
 }]);
 })();
