@@ -179,6 +179,12 @@ app.controller("awsCtrl", ['$scope','$state', '$http','$location','$window','NgT
         var uploadUrl = "";
         vm.sampleupload=uploadFile.uploadFileToUrl(file, uploadUrl);
      };
+     
+     vm.clearUpload = function(){
+    	 vm.fileName="";
+    	 angular.element("input[type='file']").val(null);
+    	 console.log(vm.fileName);
+     }
 	
     vm.init= function(){ 
     	
